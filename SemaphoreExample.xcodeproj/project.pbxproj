@@ -13,8 +13,8 @@
 		766C5DE12477B4A800C197FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DDF2477B4A800C197FD /* Main.storyboard */; };
 		766C5DE32477B4AB00C197FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE22477B4AB00C197FD /* Assets.xcassets */; };
 		766C5DE62477B4AB00C197FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE42477B4AB00C197FD /* LaunchScreen.storyboard */; };
-		766C5DF12477B4AB00C197FD /* ExclusiveControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DF02477B4AB00C197FD /* ExclusiveControlTests.swift */; };
-		766C5DFD2477BE9000C197FD /* EventFlagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DFC2477BE9000C197FD /* EventFlagTests.swift */; };
+		766C5DF12477B4AB00C197FD /* ExclusiveControlBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */; };
+		766C5DFD2477BE9000C197FD /* EventFlagBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,9 +37,9 @@
 		766C5DE52477B4AB00C197FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		766C5DE72477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		766C5DEC2477B4AB00C197FD /* SemaphoreExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SemaphoreExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		766C5DF02477B4AB00C197FD /* ExclusiveControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExclusiveControlTests.swift; sourceTree = "<group>"; };
+		766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExclusiveControlBasicTests.swift; sourceTree = "<group>"; };
 		766C5DF22477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		766C5DFC2477BE9000C197FD /* EventFlagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFlagTests.swift; sourceTree = "<group>"; };
+		766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFlagBasicTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +95,8 @@
 		766C5DEF2477B4AB00C197FD /* SemaphoreExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				766C5DF02477B4AB00C197FD /* ExclusiveControlTests.swift */,
-				766C5DFC2477BE9000C197FD /* EventFlagTests.swift */,
+				766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */,
+				766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */,
 				766C5DF22477B4AB00C197FD /* Info.plist */,
 			);
 			path = SemaphoreExampleTests;
@@ -235,8 +235,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				766C5DFD2477BE9000C197FD /* EventFlagTests.swift in Sources */,
-				766C5DF12477B4AB00C197FD /* ExclusiveControlTests.swift in Sources */,
+				766C5DFD2477BE9000C197FD /* EventFlagBasicTests.swift in Sources */,
+				766C5DF12477B4AB00C197FD /* ExclusiveControlBasicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

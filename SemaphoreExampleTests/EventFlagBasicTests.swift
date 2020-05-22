@@ -8,7 +8,7 @@
 
 import XCTest
 
-class EventFlagTests: XCTestCase {
+class EventFlagBasicTests: XCTestCase {
 
     func testEventFlagByBinarySemaphore() throws {
 
