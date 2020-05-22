@@ -9,26 +9,50 @@
 import XCTest
 @testable import SemaphoreExample
 
-class SemaphoreExampleTests: XCTestCase {
+class ExcludByBinarySemaphoreOnSameQosTest: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    /// 同じQOSで動作する２つのスレッドで、バイナリーセマフォの排他制御をテストします
+    ///
+    func testExcludByBinarySemaphoreOnSameQos() throws {
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+        let semaphore  = DispatchSemaphore(value: 1)  // make binary semaphore
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+        let expectation1 = XCTestExpectation(description: "expectation1")
+        let expectation2 = XCTestExpectation(description: "expectation2")
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        func for_thread_1() {
+            defer {
+                semaphore.signal()
+            }
+            semaphore.wait()
+            print("✴️ Thread 1")    // excluded by semaphore
+            usleep(100)             // only thread_1 wait 100 usec
         }
-    }
 
+        func for_thread_2() {
+            defer {
+                semaphore.signal()
+            }
+            semaphore.wait()
+            print("✳️ Thread 2")    // excluded by semaphore
+        }
+
+        // Thread 1
+        DispatchQueue.global(qos: .background).async {
+            for _ in 1..<10 {
+                for_thread_1()
+            }
+            expectation1.fulfill()  // End of Thread 1
+        }
+
+        // Thread 2
+        DispatchQueue.global(qos: .background).async {
+            for _ in 1..<10 {
+                for_thread_2()
+            }
+            expectation2.fulfill() // End of Thread 2
+        }
+
+        wait(for: [expectation1, expectation2], timeout: 10.0)
+    }
 }
