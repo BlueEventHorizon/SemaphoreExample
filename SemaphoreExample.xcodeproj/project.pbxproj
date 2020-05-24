@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		763E5A97247AB99B0044A80D /* SemLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763E5A94247AB99B0044A80D /* SemLogger.swift */; };
+		763E5A98247AB99B0044A80D /* EventFlagBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763E5A95247AB99B0044A80D /* EventFlagBasicTests.swift */; };
+		763E5A99247AB99B0044A80D /* ExclusiveControlBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 763E5A96247AB99B0044A80D /* ExclusiveControlBasicTests.swift */; };
 		766C5DDA2477B4A800C197FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DD92477B4A800C197FD /* AppDelegate.swift */; };
 		766C5DDC2477B4A800C197FD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DDB2477B4A800C197FD /* SceneDelegate.swift */; };
 		766C5DDE2477B4A800C197FD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DDD2477B4A800C197FD /* ViewController.swift */; };
 		766C5DE12477B4A800C197FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DDF2477B4A800C197FD /* Main.storyboard */; };
 		766C5DE32477B4AB00C197FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE22477B4AB00C197FD /* Assets.xcassets */; };
 		766C5DE62477B4AB00C197FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE42477B4AB00C197FD /* LaunchScreen.storyboard */; };
-		766C5DF12477B4AB00C197FD /* ExclusiveControlBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */; };
-		766C5DFD2477BE9000C197FD /* EventFlagBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */; };
-		766C5E012478E82300C197FD /* LoggerForTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DFF2478E4F500C197FD /* LoggerForTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		763E5A94247AB99B0044A80D /* SemLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemLogger.swift; sourceTree = "<group>"; };
+		763E5A95247AB99B0044A80D /* EventFlagBasicTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventFlagBasicTests.swift; sourceTree = "<group>"; };
+		763E5A96247AB99B0044A80D /* ExclusiveControlBasicTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExclusiveControlBasicTests.swift; sourceTree = "<group>"; };
 		766C5DD62477B4A800C197FD /* SemaphoreExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SemaphoreExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		766C5DD92477B4A800C197FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		766C5DDB2477B4A800C197FD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -38,10 +41,7 @@
 		766C5DE52477B4AB00C197FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		766C5DE72477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		766C5DEC2477B4AB00C197FD /* SemaphoreExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SemaphoreExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExclusiveControlBasicTests.swift; sourceTree = "<group>"; };
 		766C5DF22477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFlagBasicTests.swift; sourceTree = "<group>"; };
-		766C5DFF2478E4F500C197FD /* LoggerForTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerForTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,9 +97,9 @@
 		766C5DEF2477B4AB00C197FD /* SemaphoreExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				766C5DFF2478E4F500C197FD /* LoggerForTest.swift */,
-				766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */,
-				766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */,
+				763E5A96247AB99B0044A80D /* ExclusiveControlBasicTests.swift */,
+				763E5A95247AB99B0044A80D /* EventFlagBasicTests.swift */,
+				763E5A94247AB99B0044A80D /* SemLogger.swift */,
 				766C5DF22477B4AB00C197FD /* Info.plist */,
 			);
 			path = SemaphoreExampleTests;
@@ -159,6 +159,7 @@
 					};
 					766C5DEB2477B4AB00C197FD = {
 						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1140;
 						TestTargetID = 766C5DD52477B4A800C197FD;
 					};
 				};
@@ -238,9 +239,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				766C5DFD2477BE9000C197FD /* EventFlagBasicTests.swift in Sources */,
-				766C5E012478E82300C197FD /* LoggerForTest.swift in Sources */,
-				766C5DF12477B4AB00C197FD /* ExclusiveControlBasicTests.swift in Sources */,
+				763E5A97247AB99B0044A80D /* SemLogger.swift in Sources */,
+				763E5A98247AB99B0044A80D /* EventFlagBasicTests.swift in Sources */,
+				763E5A99247AB99B0044A80D /* ExclusiveControlBasicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +430,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D6A5KP29BP;
 				INFOPLIST_FILE = SemaphoreExampleTests/Info.plist;
@@ -440,6 +442,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beowulf-tech.SemaphoreExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SemaphoreExample.app/SemaphoreExample";
@@ -451,6 +454,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D6A5KP29BP;
 				INFOPLIST_FILE = SemaphoreExampleTests/Info.plist;

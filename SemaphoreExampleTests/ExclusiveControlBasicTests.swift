@@ -3,25 +3,55 @@
 //  SemaphoreExampleTests
 //
 //  Created by k_terada on 2020/05/22.
-//  Copyright © 2020 k2moons. All rights reserved.
+//  Copyright © 2020 k2terada. All rights reserved.
 //
 
 import XCTest
-@testable import SemaphoreExample
 
 class ExclusiveControlBasicTests: XCTestCase {
 
-    func testNoExclusiveControlInTwoThreadWithBinarySemaphoreAndSameQos() throws {
+    /*
+     semLog.slow() shows the test log by sleeping for each character.
+     so other log may interrupt the test log while sleeping.
+
+     semLog.slow() runs on two *** global *** threads.
+
+     [result]
+     each semLog.slow() interrupt another semLog.slow()
+     because there is no semaphore to avoid interrupt from other thread to use same resource.
+     in this case same resource means print() function. and print() is not thread safe.
+     FYI: some lebel of thread qos avoid any interrupt
+
+     ✳️✴️  ThreadT 1h [18:r2e3ad: 2 0[7.1638:20] [c3o:0m.appl7e..root63.0ba]c kgr[oucnd-qosom.]
+     a✴️ ppThlree.adro ot1. [1b8ac:kgr23:o0u8n.0d2-5qo] [coms].a
+     p✳️p Tlheread. 2 root[1.8ba:23ckg:r08o.und3-0qo0s]]
+     ✴️[c omThr.eaapple.dro ot.b1ac [k18:23gr:0ou8nd.-5q5o0s]]
+     ✳️ [co Tm.aphprealed .r2o ot.bac[k18g:r23:0ound8-qo.87s]7
+     ✴️] Th [rcome.apapd le1.r o[o18t.:ba23c:kg09r.ou1n2d2-]q o[sc]om.
+     ✳️ Tahprpealde.r 2 [o1o8:t2.3:bac0kg9.ro55und2]- q[coosm.a]p
+     ✴️ pleThre.arod 1 o[t1.8:b23:0ack9.8gr2o2] un[d-qocos]m
+     ✳️. aTpplhe.rroeoat.bd a2ck g[1ro8:2un3d-:q1os0].10
+     ✴️0 ] [coTm.ahrpepaled .r1oo [t1.b8:ack2g3ro:10und.-370]qo s][co
+     ✳️ Tm.harepapled. 2r oot.[1b8a:c23:k1g0rou.n7d53]- q[como.apsple]
+     ✴️ .rThreoad o1t [1.ba8:c2kg3:r1o1.0u8n0]d-q [coosm.a]
+     ✳️ Thrppeadle .2 [r18oo:23t.b:ack1gr1.4o35]und -[qcoosm]
+     .✴️apple T.hroroet.adb a1ck g[r1oun8d-:qos23]:
+     ✳️1 Threa1d .271 8[] 1[c8:om.23a:1p1pl.e.9ro1ot.4]b [ackcgroomu.apndple-.qors]o
+     o✴️ tT.hbraecakgd 1 [1r8o:23:und-12.qo2s11]]
+     [✳️co Thmr.appealde .2root [1.8b:ac2kg3:12rou.nd-3qo5s7] ]
+
+     */
+    func testSleepingLogOnTwoGlobalThreadWithoutSemaphore() throws {
 
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
         func for_thread_1() {
-            log.slow("✴️ Thread 1")     // excluded by semaphore
+            semLog.slow("✴️ Thread 1")     // excluded by semaphore
         }
 
         func for_thread_2() {
-            log.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
@@ -43,26 +73,82 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
-    // Result of testNoExclusiveControlInTwoThreadWithBinarySemaphoreAndSameQos()
+    /*
+     semLog.slow() shows the test log by sleeping for each character.
+     so other log may interrupt the test log while sleeping.
+
+     semLog.slow() runs on two *** main *** threads.
+
+     [result]
+     each semLog.slow() doesn't interrupt another semLog.slow()
+     because two thread are same.
+     we use queue for the two thread (actually it's one thread) to execute defferent timing.
+     but it's serial execution, so they doesn't interrupt another task.
+
+     ✴️ Thread 1 [22:42:27.422] [main]
+     ✴️ Thread 1 [22:42:27.425] [main]
+     ✴️ Thread 1 [22:42:27.427] [main]
+     ✴️ Thread 1 [22:42:27.430] [main]
+     ✴️ Thread 1 [22:42:27.433] [main]
+     ✴️ Thread 1 [22:42:27.435] [main]
+     ✴️ Thread 1 [22:42:27.438] [main]
+     ✴️ Thread 1 [22:42:27.440] [main]
+     ✴️ Thread 1 [22:42:27.443] [main]
+     ✳️ Thread 2 [22:42:27.445] [main]
+     ✳️ Thread 2 [22:42:27.448] [main]
+     ✳️ Thread 2 [22:42:27.450] [main]
+     ✳️ Thread 2 [22:42:27.453] [main]
+     ✳️ Thread 2 [22:42:27.456] [main]
+     ✳️ Thread 2 [22:42:27.459] [main]
+     ✳️ Thread 2 [22:42:27.461] [main]
+     ✳️ Thread 2 [22:42:27.464] .......
+     */
+
+    func testSleepingLogOnTwoMainThreadWithoutSemaphore() throws {
+
+        let expectation1 = XCTestExpectation(description: "expectation1")
+        let expectation2 = XCTestExpectation(description: "expectation2")
+
+        func for_thread_1() {
+            semLog.slow("✴️ Thread 1")     // excluded by semaphore
+        }
+
+        func for_thread_2() {
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+        }
+
+        // Thread 1
+        DispatchQueue.main.async {
+            for _ in 1..<10 {
+                for_thread_1()
+            }
+            expectation1.fulfill()  // End of Thread 1
+        }
+
+        // Thread 2
+        DispatchQueue.main.async {
+            for _ in 1..<10 {
+                for_thread_2()
+            }
+            expectation2.fulfill() // End of Thread 2
+        }
+
+        wait(for: [expectation1, expectation2], timeout: 10.0)
+    }
 
     /*
-     ✳️✴️  ThreadT 1h [18:r2e3ad: 2 0[7.1638:20] [c3o:0m.appl7e..root63.0ba]c kgr[oucnd-qosom.]
-     a✴️ ppThlree.adro ot1. [1b8ac:kgr23:o0u8n.0d2-5qo] [coms].a
-     p✳️p Tlheread. 2 root[1.8ba:23ckg:r08o.und3-0qo0s]]
-     ✴️[c omThr.eaapple.dro ot.b1ac [k18:23gr:0ou8nd.-5q5o0s]]
-     ✳️ [co Tm.aphprealed .r2o ot.bac[k18g:r23:0ound8-qo.87s]7
-     ✴️] Th [rcome.apapd le1.r o[o18t.:ba23c:kg09r.ou1n2d2-]q o[sc]om.
-     ✳️ Tahprpealde.r 2 [o1o8:t2.3:bac0kg9.ro55und2]- q[coosm.a]p
-     ✴️ pleThre.arod 1 o[t1.8:b23:0ack9.8gr2o2] un[d-qocos]m
-     ✳️. aTpplhe.rroeoat.bd a2ck g[1ro8:2un3d-:q1os0].10
-     ✴️0 ] [coTm.ahrpepaled .r1oo [t1.b8:ack2g3ro:10und.-370]qo s][co
-     ✳️ Tm.harepapled. 2r oot.[1b8a:c23:k1g0rou.n7d53]- q[como.apsple]
-     ✴️ .rThreoad o1t [1.ba8:c2kg3:r1o1.0u8n0]d-q [coosm.a]
-     ✳️ Thrppeadle .2 [r18oo:23t.b:ack1gr1.4o35]und -[qcoosm]
-     .✴️apple T.hroroet.adb a1ck g[r1oun8d-:qos23]:
-     ✳️1 Threa1d .271 8[] 1[c8:om.23a:1p1pl.e.9ro1ot.4]b [ackcgroomu.apndple-.qors]o
-     o✴️ tT.hbraecakgd 1 [1r8o:23:und-12.qo2s11]]
-     [✳️co Thmr.appealde .2root [1.8b:ac2kg3:12rou.nd-3qo5s7] ]
+     semLog.slow() shows the test log by sleeping for each character.
+     so other log may interrupt the test log while sleeping.
+
+     semLog.slow() runs on two *** main *** threads.
+
+     [result]
+     each semLog.slow() doesn't interrupt another semLog.slow()
+     because two thread are same.
+     we use queue for the two thread (actually it's one thread) to execute defferent timing.
+     but it's serial execution, so they doesn't interrupt another task.
+
+
      */
 
     /// Test exclusive control of binary semaphore with two threads running on same QOS
@@ -78,7 +164,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            log.slow("✴️ Thread 1")     // excluded by semaphore
+            semLog.slow("✴️ Thread 1")     // excluded by semaphore
         }
 
         func for_thread_2() {
@@ -86,7 +172,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            log.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
@@ -146,7 +232,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()            // there are enogh semaphore for each thred, so they doesn't need to wait
-            log.slow("✴️ Thread 1")    // excluded by semaphore
+            semLog.slow("✴️ Thread 1")    // excluded by semaphore
         }
 
         func for_thread_2() {
@@ -154,7 +240,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()            // there are enogh semaphore for each thred, so they doesn't need to wait
-            log.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
@@ -211,7 +297,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            log.slow("✴️ Thread 1")    // excluded by semaphore
+            semLog.slow("✴️ Thread 1")    // excluded by semaphore
         }
 
         func for_thread_2() {
@@ -219,7 +305,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            log.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
@@ -269,11 +355,11 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation2 = XCTestExpectation(description: "expectation2")
 
         func for_thread_1() {
-            log.slow("✴️ Thread 1")    // excluded by semaphore
+            semLog.slow("✴️ Thread 1")    // excluded by semaphore
         }
 
         func for_thread_2() {
-            log.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1

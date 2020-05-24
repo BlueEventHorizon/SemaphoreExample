@@ -1,20 +1,20 @@
 //
-//  Logger.swift
-//  BwTools
+//  SemLogger.swift
+//  SemaphoreExampleTests
 //
-//  Created by k2moons on 2017/08/18.
-//  Copyright (c) 2017 k2moons. All rights reserved.
+//  Created by k2terada on 2017/08/18.
+//  Copyright (c) 2017 k2terada. All rights reserved.
 //
 
 import Foundation
 
 // MARK: - Global Instanse
 
-let log = Logger()
+let semLog = SemLogger()
 
-// MARK: - Logger
+// MARK: - SemLogger
 
-class Logger {
+class SemLogger {
 
     init() {}
 

@@ -3,7 +3,7 @@
 //  SemaphoreExampleTests
 //
 //  Created by k_terada on 2020/05/22.
-//  Copyright © 2020 k2moons. All rights reserved.
+//  Copyright © 2020 k2terada. All rights reserved.
 //
 
 import XCTest
@@ -21,18 +21,18 @@ class EventFlagBasicTests: XCTestCase {
 
             usleep(1000)
 
-            log.info("✳️ Will send EventFlag just after now")
+            semLog.info("✳️ Will send EventFlag just after now")
 
             semaphore.signal()
 
-            log.info("✳️ Sent EventFlag")
+            semLog.info("✳️ Sent EventFlag")
 
             expectation1.fulfill()
         }
 
         semaphore.wait()
 
-        log.info("✴️ Recieved EventFlag")
+        semLog.info("✴️ Recieved EventFlag")
 
         expectation2.fulfill()
 
@@ -59,18 +59,18 @@ class EventFlagBasicTests: XCTestCase {
 
             DispatchQueue.global(qos: .background).async {
                 semaphore.wait()
-                log.info("✴️ Recieved EventFlag(\(counter))")
+                semLog.info("✴️ Recieved EventFlag(\(counter))")
                 expectation.fulfill()
             }
         }
 
         for (index, semaphore) in semaphores.enumerated() {
 
-            log.info("✳️ Start to send EventFlag(\(index)) just after now")
+            semLog.info("✳️ Start to send EventFlag(\(index)) just after now")
 
             semaphore.signal()
 
-            log.info("✳️ Sent EventFlag(\(index))")
+            semLog.info("✳️ Sent EventFlag(\(index))")
 
             usleep(100)
         }
@@ -131,11 +131,11 @@ class EventFlagBasicTests: XCTestCase {
                 semaphores.append((semaphore))
                 //expectations.append(expectation)
 
-                log.info("✴️ Make Reciever Thread EventFlag(\(counter))")
+                semLog.info("✴️ Make Reciever Thread EventFlag(\(counter))")
 
                 DispatchQueue.global(qos: .background).async {
                     semaphore.wait()
-                    log.info("✴️ Recieved EventFlag(\(counter))")
+                    semLog.info("✴️ Recieved EventFlag(\(counter))")
                     //expectation.fulfill()
                 }
             }
@@ -149,11 +149,11 @@ class EventFlagBasicTests: XCTestCase {
 
             for (index, semaphore) in semaphores.enumerated() {
 
-                log.info("✳️ Start to send EventFlag(\(index)) just after now")
+                semLog.info("✳️ Start to send EventFlag(\(index)) just after now")
 
                 semaphore.signal()
 
-                log.info("✳️ Sent EventFlag(\(index))")
+                semLog.info("✳️ Sent EventFlag(\(index))")
             }
         }
 
@@ -206,11 +206,11 @@ class EventFlagBasicTests: XCTestCase {
                 semaphores.append((semaphore))
                 //expectations.append(expectation)
 
-                log.info("✴️ Make Reciever Thread EventFlag(\(counter))")
+                semLog.info("✴️ Make Reciever Thread EventFlag(\(counter))")
 
                 DispatchQueue.global(qos: .background).async {
                     semaphore.wait()
-                    log.info("✴️ Recieved EventFlag(\(counter))")
+                    semLog.info("✴️ Recieved EventFlag(\(counter))")
                     //expectation.fulfill()
                 }
             }
@@ -226,11 +226,11 @@ class EventFlagBasicTests: XCTestCase {
 
             for (index, semaphore) in semaphores.enumerated() {
 
-                log.info("✳️ Start to send EventFlag(\(index)) just after now")
+                semLog.info("✳️ Start to send EventFlag(\(index)) just after now")
 
                 semaphore.signal()
 
-                log.info("✳️ Sent EventFlag(\(index))")
+                semLog.info("✳️ Sent EventFlag(\(index))")
             }
         }
 
