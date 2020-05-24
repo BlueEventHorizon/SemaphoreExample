@@ -15,6 +15,7 @@
 		766C5DE62477B4AB00C197FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE42477B4AB00C197FD /* LaunchScreen.storyboard */; };
 		766C5DF12477B4AB00C197FD /* ExclusiveControlBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */; };
 		766C5DFD2477BE9000C197FD /* EventFlagBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */; };
+		766C5E012478E82300C197FD /* LoggerForTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766C5DFF2478E4F500C197FD /* LoggerForTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExclusiveControlBasicTests.swift; sourceTree = "<group>"; };
 		766C5DF22477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFlagBasicTests.swift; sourceTree = "<group>"; };
+		766C5DFF2478E4F500C197FD /* LoggerForTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerForTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 		766C5DEF2477B4AB00C197FD /* SemaphoreExampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				766C5DFF2478E4F500C197FD /* LoggerForTest.swift */,
 				766C5DF02477B4AB00C197FD /* ExclusiveControlBasicTests.swift */,
 				766C5DFC2477BE9000C197FD /* EventFlagBasicTests.swift */,
 				766C5DF22477B4AB00C197FD /* Info.plist */,
@@ -236,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				766C5DFD2477BE9000C197FD /* EventFlagBasicTests.swift in Sources */,
+				766C5E012478E82300C197FD /* LoggerForTest.swift in Sources */,
 				766C5DF12477B4AB00C197FD /* ExclusiveControlBasicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
