@@ -10,6 +10,8 @@ import XCTest
 
 class ExclusiveControlBasicTests: XCTestCase {
 
+    // MARK: -
+    
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
@@ -18,8 +20,8 @@ class ExclusiveControlBasicTests: XCTestCase {
 
      [result]
      each semLog.slow() interrupt another semLog.slow()
-     because there is no semaphore to avoid interrupt from other thread to use same resource.
-     in this case same resource means print() function. and print() is not thread safe.
+     because there is no semaphore to avoid interrupt from other thread that uses same resource.
+     in this case, same resource means print() function. and print() is not thread safe.
      FYI: some lebel of thread qos avoid any interrupt
 
      ✳️✴️  ThreadT 1h [18:r2e3ad: 2 0[7.1638:20] [c3o:0m.appl7e..root63.0ba]c kgr[oucnd-qosom.]
@@ -73,6 +75,8 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
+    // MARK: -
+    
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
@@ -85,23 +89,24 @@ class ExclusiveControlBasicTests: XCTestCase {
      we use queue for the two thread (actually it's one thread) to execute defferent timing.
      but it's serial execution, so they doesn't interrupt another task.
 
-     ✴️ Thread 1 [22:42:27.422] [main]
-     ✴️ Thread 1 [22:42:27.425] [main]
-     ✴️ Thread 1 [22:42:27.427] [main]
-     ✴️ Thread 1 [22:42:27.430] [main]
-     ✴️ Thread 1 [22:42:27.433] [main]
-     ✴️ Thread 1 [22:42:27.435] [main]
-     ✴️ Thread 1 [22:42:27.438] [main]
-     ✴️ Thread 1 [22:42:27.440] [main]
-     ✴️ Thread 1 [22:42:27.443] [main]
-     ✳️ Thread 2 [22:42:27.445] [main]
-     ✳️ Thread 2 [22:42:27.448] [main]
-     ✳️ Thread 2 [22:42:27.450] [main]
-     ✳️ Thread 2 [22:42:27.453] [main]
-     ✳️ Thread 2 [22:42:27.456] [main]
-     ✳️ Thread 2 [22:42:27.459] [main]
-     ✳️ Thread 2 [22:42:27.461] [main]
-     ✳️ Thread 2 [22:42:27.464] .......
+     ✴️ Thread 1 [23:31:22.714] [main]
+     ✴️ Thread 1 [23:31:22.717] [main]
+     ✴️ Thread 1 [23:31:22.719] [main]
+     ✴️ Thread 1 [23:31:22.722] [main]
+     ✴️ Thread 1 [23:31:22.724] [main]
+     ✴️ Thread 1 [23:31:22.727] [main]
+     ✴️ Thread 1 [23:31:22.729] [main]
+     ✴️ Thread 1 [23:31:22.732] [main]
+     ✴️ Thread 1 [23:31:22.734] [main]
+     ✳️ Thread 2 [23:31:22.736] [main]
+     ✳️ Thread 2 [23:31:22.739] [main]
+     ✳️ Thread 2 [23:31:22.741] [main]
+     ✳️ Thread 2 [23:31:22.743] [main]
+     ✳️ Thread 2 [23:31:22.746] [main]
+     ✳️ Thread 2 [23:31:22.749] [main]
+     ✳️ Thread 2 [23:31:22.751] [main]
+     ✳️ Thread 2 [23:31:22.754] [main]
+     ✳️ Thread 2 [23:31:22.756] [main]
      */
 
     func testSleepingLogOnTwoMainThreadWithoutSemaphore() throws {
@@ -136,23 +141,45 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
+    // MARK: -
+    
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
 
-     semLog.slow() runs on two *** main *** threads.
+     semLog.slow() runs on two *** global *** threads with binary semaphore.
+
+     [FYI]
+     semaphore has 1 rasource counter is called binary semaphore or mutex.
 
      [result]
-     each semLog.slow() doesn't interrupt another semLog.slow()
-     because two thread are same.
-     we use queue for the two thread (actually it's one thread) to execute defferent timing.
-     but it's serial execution, so they doesn't interrupt another task.
+     each semLog.slow() interrupt doesn't another semLog.slow()
+     because there is semaphore to avoid interrupt from other thread that uses same resource.
+     in this case, same resource means print() function. and print() is not thread safe.
+     FYI: some lebel of thread qos avoid any interrupt
 
+     ✴️ Thread 1 [23:36:04.091] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.145] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:04.197] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.246] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:04.296] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.352] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:04.404] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.455] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:04.502] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.550] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:04.650] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.750] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:04.854] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:04.944] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:05.005] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:05.103] [com.apple.root.background-qos]
+     ✴️ Thread 1 [23:36:05.198] [com.apple.root.background-qos]
+     ✳️ Thread 2 [23:36:05.253] [com.apple.root.background-qos]
 
      */
 
-    /// Test exclusive control of binary semaphore with two threads running on same QOS
-    func testExclusiveControlInTwoThreadWithBinarySemaphoreAndSameQos() throws {
+    func testSleepingLogOnTwoGlobalThreadWithSemaphore() throws {
 
         let semaphore  = DispatchSemaphore(value: 1)  // ⚠️ initialize binary semaphore with 1
 
@@ -194,33 +221,42 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
-    // Result of testExclusiveControlInTwoThreadWithBinarySemaphoreAndSameQos()
+    // MARK: -
+    
     /*
+     semLog.slow() shows the test log by sleeping for each character.
+     so other log may interrupt the test log while sleeping.
 
-     ✴️ Thread 1 [18:24:25.079] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.090] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.106] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.119] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.131] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.140] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.162] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.188] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.213] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.228] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.258] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.276] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.289] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.315] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.332] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.338] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:24:25.359] [com.apple.root.background-qos]
-     ✳️ Thread 2 [18:24:25.372] [com.apple.root.background-qos]
+     semLog.slow() runs on two *** global *** threads with semaphore that has 2 resources.
 
+     [FYI]
+     semaphore has 1 rasource counter is called binary semaphore or mutex.
+
+     [result]
+     each semLog.slow() interrupt another semLog.slow()
+     because there are 2 semaphore, and each thread can get thier own semaphore.
+     so there is no block
+     
+     ✳️✴️  ThTrheraedad 2  1[ 2[23:43:0:402:0.280.048]0 4][ co[cmo.ma.paplpepl.ero.orot.bota.cbkgraockungrdo-uqnods-q]o
+     s✳️ ]T
+     ✴️hr eTahdr e2ad [ 231:4 0:[2023:40:20.81.48]14]  [[cocomm.app.laep.proloet..broaoct.kbgacrkoungdr-qoos]
+     ✴️ uThnrde-qaods]
+     1✳️ Th re[ad23 2: 4[023:40:20:.2802.8524] ][ c[ocomm..aappppllee..rroot.obaoct.bkgraocunkgdr-qoousn]d
+     -✳️qos]
+     ✴️ Thread  1 [23T:hread4 20: 2[23:40:20.083.5]83 5[]c o[cm.oamp.plaep.proloe.tr.oboat.cbkagcrokugndro-quonsd]
+     -q✳️ osT]h
+     r✴️ea dT hr2e a[2d 31 [2:3:440:02:020..8845] [c4om5.]a ppl[ec.rooot.mb.aapckgprloune.d-qrooos]
+     ✴️ Tht.rbeaacd k1gr [o2u3nd-qos:]4
+     ✳️ 0:T2h0r.8e5a8] [com.appled. root.background-qos2]
+     ✴️[ T23h:r4e0a:d 1 [232:040.862] :[2c0.om86.8a] [ppcloem..aropopt.lbea.crokotgr.obunad-cqkogsr]o
+     u✳️n dT-qhorsea]d
+      ✴️ 2T h[2r3ea:d40 1: [202.387:54]0 :[2c0om.8.a7p6p] l[ec.ormo.aopt.pble.roaockgrotun.bdac-kqos]g
+     r✳️o Threuad 2nd -[2qos3:]
+     4✴️ 0:20T.8h86] [comre.aapd 1p l[2e.r3o:o40t:.ba2c0.k8gr90] [ocoumn.adp-qpoles.]r
+     ✳️ oTohrtea.bda c2k g[r2o3un:d4-q0o:s20].9
      */
 
-    /// Test exclusive control of many semaphore with two threads running on same QOS
-    /// if wait(), there are enogh semaphore for each thred, so they doesn't need to wait
-    func testExclusiveControlInTwoThreadWithManySemaphoreAndSameQos() throws {
+    func testSleepingLogOnTwoGlobalThreadWithTwoSemaphore() throws {
 
         let semaphore  = DispatchSemaphore(value: 2)  // ⚠️ initialize binary semaphore with 2
 
@@ -262,27 +298,30 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
-    // Result of testExclusiveControlInTwoThreadWithManySemaphoreAndSameQos()
-
+    
+    
+    
+    
+    
+    
+    // MARK: -
+    
     /*
-     ✴️✳️  TThrhreaed a1 d [21 8[1:82:42:543:.5871] 3[.c8o7m1.a]p ple.root.back[cogrm.apple.root.backgroouunndd--qqooss]
-     ]
-     ✳️✴️  ThreThreada 2d  1[ 1[8:128:424:5:353..88886]6 ][ c[coom.mapple.r.ooatpp.blaeck.rgorooutn.dbac-kqgosr]ou
-     ✳️n Tdhr-qeoasd]
-     ✴️2 T h[re1a8d: 12 4[:18:24:53.907] [co5m3..9ap0p7l]e. r[ocoom.t.apbacplekg.rroooundt-.qbaosc]kg
-     ✴️r oThread 1 [18:u24n:d5-q3o.9s]1
-     ✳️ 4]T hre[acod 2m [18:24.:ap5p3l.e9.1ro7o]t. b[accokmgrou.nda-qppole.sr]o
-     ✴️ot .Tbahrcekgardo 1un [d-q18os:]
-     2✳️4: 5T3.h92rea4] d[ co2 m[.1a8:ppl24e.:5ro3ot.9.b27a]ck [grocuonmd.-qaops]
-     ✴️ Threapdl e1 [.1r8oot.back:g24ro:5u3.9n3d1-]q [os]co
-     ✳️ m.Tahrpeplad 2 e[1.8roo:24:5t3..939] b[acockgroundm.a-ppqos]
-     ✴️le .Trohortead.b a1ckgro [1u8:nd24:-q5o3.9s62]]
-     ✳️  [Tcohmr.eaapdp l2e .[ro18:2ot.bac4:k5gr3o.u96nd-8]q o[s]c
-     o✴️ mThr.eaapd 1 [18p:le2.4ro:ot53.b.97ack3]gr [cooumnd-.qoasp]p
-     l✳️e .rTohort.eabd a2c [k18gr:o24un:5d3.-q97o8]s]
-     ✴️ Threa[d c1 [18:24:53.981] o[cmo.ma.pplapepl.ero.rootot..bbackacgrkound-qos]
-     ✳️ Thgread 2 [r1ou8n:d-24q:o5s3]
+     semLog.slow() shows the test log by sleeping for each character.
+     so other log may interrupt the test log while sleeping.
+
+     semLog.slow() runs on two *** global *** threads with semaphore that has 2 resources.
+
+     [FYI]
+     semaphore has 1 rasource counter is called binary semaphore or mutex.
+
+     [result]
+     each semLog.slow() interrupt another semLog.slow()
+     because there are 2 semaphore, and each thread can get thier own semaphore.
+     so there is no block
+ 
      */
+    
 
     /// Test exclusive control in 2 thread with binary semaphore and different qos
     func testExclusiveControlInTwoThreadWithBinarySemaphoreAndDifferentQos() throws {
