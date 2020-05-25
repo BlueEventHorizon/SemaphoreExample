@@ -11,7 +11,7 @@ import XCTest
 class ExclusiveControlBasicTests: XCTestCase {
 
     // MARK: -
-    
+
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
@@ -76,7 +76,7 @@ class ExclusiveControlBasicTests: XCTestCase {
     }
 
     // MARK: -
-    
+
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
@@ -142,7 +142,76 @@ class ExclusiveControlBasicTests: XCTestCase {
     }
 
     // MARK: -
-    
+
+    /*
+
+     semLog.slow() shows the test log by sleeping for each character.
+     so other log may interrupt the test log while sleeping.
+
+     semLog.slow() runs on *** same *** threads.
+
+     [result]
+     each semLog.slow() doesn't interrupt another semLog.slow()
+     because two thread are same.
+     we use queue for the two thread (actually it's one thread) to execute defferent timing.
+     but it's serial execution, so they doesn't interrupt another task.
+
+     ✴️ Thread 1 [00:27:40.387] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.395] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.401] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.407] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.413] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.419] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.425] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.431] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✴️ Thread 1 [00:27:40.436] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.442] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.448] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.453] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.460] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.465] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.471] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.477] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.483] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     ✳️ Thread 2 [00:27:40.489] [testSleepingLogOnSmaeGlobalThreadWithoutSemaphore]
+     */
+
+    func testSleepingLogOnSmaeGlobalThreadWithoutSemaphore() throws {
+
+        let dispatchQueue: DispatchQueue = DispatchQueue(label: "testSleepingLogOnSmaeGlobalThreadWithoutSemaphore", qos: .default, attributes: [], target: nil)
+
+        let expectation1 = XCTestExpectation(description: "expectation1")
+        let expectation2 = XCTestExpectation(description: "expectation2")
+
+        func for_thread_1() {
+            semLog.slow("✴️ Thread 1")     // excluded by semaphore
+        }
+
+        func for_thread_2() {
+            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+        }
+
+        // Thread 1
+        dispatchQueue.async {
+            for _ in 1..<10 {
+                for_thread_1()
+            }
+            expectation1.fulfill()  // End of Thread 1
+        }
+
+        // Thread 2
+        dispatchQueue.async {
+            for _ in 1..<10 {
+                for_thread_2()
+            }
+            expectation2.fulfill() // End of Thread 2
+        }
+
+        wait(for: [expectation1, expectation2], timeout: 10.0)
+    }
+
+    // MARK: -
+
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
@@ -222,7 +291,7 @@ class ExclusiveControlBasicTests: XCTestCase {
     }
 
     // MARK: -
-    
+
     /*
      semLog.slow() shows the test log by sleeping for each character.
      so other log may interrupt the test log while sleeping.
@@ -236,7 +305,7 @@ class ExclusiveControlBasicTests: XCTestCase {
      each semLog.slow() interrupt another semLog.slow()
      because there are 2 semaphore, and each thread can get thier own semaphore.
      so there is no block
-     
+
      ✳️✴️  ThTrheraedad 2  1[ 2[23:43:0:402:0.280.048]0 4][ co[cmo.ma.paplpepl.ero.orot.bota.cbkgraockungrdo-uqnods-q]o
      s✳️ ]T
      ✴️hr eTahdr e2ad [ 231:4 0:[2023:40:20.81.48]14]  [[cocomm.app.laep.proloet..broaoct.kbgacrkoungdr-qoos]
@@ -250,7 +319,7 @@ class ExclusiveControlBasicTests: XCTestCase {
      ✳️ 0:T2h0r.8e5a8] [com.appled. root.background-qos2]
      ✴️[ T23h:r4e0a:d 1 [232:040.862] :[2c0.om86.8a] [ppcloem..aropopt.lbea.crokotgr.obunad-cqkogsr]o
      u✳️n dT-qhorsea]d
-      ✴️ 2T h[2r3ea:d40 1: [202.387:54]0 :[2c0om.8.a7p6p] l[ec.ormo.aopt.pble.roaockgrotun.bdac-kqos]g
+     ✴️ 2T h[2r3ea:d40 1: [202.387:54]0 :[2c0om.8.a7p6p] l[ec.ormo.aopt.pble.roaockgrotun.bdac-kqos]g
      r✳️o Threuad 2nd -[2qos3:]
      4✴️ 0:20T.8h86] [comre.aapd 1p l[2e.r3o:o40t:.ba2c0.k8gr90] [ocoumn.adp-qpoles.]r
      ✳️ oTohrtea.bda c2k g[r2o3un:d4-q0o:s20].9
@@ -298,30 +367,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
-    
-    
-    
-    
-    
-    
     // MARK: -
-    
-    /*
-     semLog.slow() shows the test log by sleeping for each character.
-     so other log may interrupt the test log while sleeping.
-
-     semLog.slow() runs on two *** global *** threads with semaphore that has 2 resources.
-
-     [FYI]
-     semaphore has 1 rasource counter is called binary semaphore or mutex.
-
-     [result]
-     each semLog.slow() interrupt another semLog.slow()
-     because there are 2 semaphore, and each thread can get thier own semaphore.
-     so there is no block
- 
-     */
-    
 
     /// Test exclusive control in 2 thread with binary semaphore and different qos
     func testExclusiveControlInTwoThreadWithBinarySemaphoreAndDifferentQos() throws {
@@ -366,28 +412,6 @@ class ExclusiveControlBasicTests: XCTestCase {
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
 
-    // Result of testExclusiveControlInTwoThreadWithBinarySemaphoreAndDifferentQos
-    /*
-     ✴️ Thread 1 [18:25:10.291] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.304] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.321] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.325] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.356] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.362] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.378] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.383] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.405] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.410] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.420] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.425] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.458] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.464] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.483] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.487] [com.apple.root.background-qos]
-     ✴️ Thread 1 [18:25:10.522] [com.apple.root.user-interactive-qos]
-     ✳️ Thread 2 [18:25:10.528] [com.apple.root.background-qos]
-     */
-
     func testThreadWithoutSemaphoreWithDifferentQos() throws {
 
         let expectation1 = XCTestExpectation(description: "expectation1")
@@ -419,25 +443,4 @@ class ExclusiveControlBasicTests: XCTestCase {
 
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
-
-    /*
-     ✴️✳️  TThhrerade a2d [21:41:57.299 ] [c1om. ap[p2le1:.r4o1o:t.5d7efa.u3l0t-0q]os]
-     ✳️ Thre ad[ 2c o[21:m41:.57.a3p05p] l[com.apple.root.dee.farult-qos]
-     ✳️ Threaod o2 t[.2b1a:c41:57.310]k [cgorm.apple.root.defoauulnt-dqos]
-     ✳️ Thre-aqd o2 s][
-     2✴️ 1:41T:5h7.315] [corme.apple.root.defaulatd-q os1]
-     ✳️[ 2Th1r:ea4d1 2: 5[7.21:41:57.319] 3[co1m.6a]pple .r[ocootm..deafapupllte-.qoros]o
-     ✳️t Thread 2 [2.1b:41:57.324] [com.applaec.root.default-qosk]
-     ✳️ Thread 2 [21:g41:57.328] [com.apple.root.defraoult-qos]
-     ✳️ Threadu n2d -[q2o1s]:41
-     ✴️:57.332] [c oTmh.arpple.reoot.defaaudl 1t- q[o2s1]:
-     4✳️ T1hr:e5a7d .23 3[23]1: 4[1:57.c336] [com.apple.root.odmefa.ulat-ppqoles].
-     root.background-qos]
-     ✴️ Thread 1 [21:41:57.349] [com.apple.root.background-qos]
-     ✴️ Thread 1 [21:41:57.357] [com.apple.root.background-qos]
-     ✴️ Thread 1 [21:41:57.368] [com.apple.root.background-qos]
-     ✴️ Thread 1 [21:41:57.374] [com.apple.root.background-qos]
-     ✴️ Thread 1 [21:41:57.404] [com.apple.root.background-qos]
-     ✴️ Thread 1 [21:41:57.420] [com.apple.root.background-qos]
-     */
 }

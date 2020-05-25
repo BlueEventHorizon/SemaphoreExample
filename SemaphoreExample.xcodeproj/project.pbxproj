@@ -16,6 +16,7 @@
 		766C5DE12477B4A800C197FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DDF2477B4A800C197FD /* Main.storyboard */; };
 		766C5DE32477B4AB00C197FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE22477B4AB00C197FD /* Assets.xcassets */; };
 		766C5DE62477B4AB00C197FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 766C5DE42477B4AB00C197FD /* LaunchScreen.storyboard */; };
+		76908D82247BD97100A06201 /* DispatchWorkItemTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76908D81247BD97100A06201 /* DispatchWorkItemTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		766C5DE72477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		766C5DEC2477B4AB00C197FD /* SemaphoreExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SemaphoreExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		766C5DF22477B4AB00C197FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		76908D81247BD97100A06201 /* DispatchWorkItemTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchWorkItemTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				763E5A96247AB99B0044A80D /* ExclusiveControlBasicTests.swift */,
 				763E5A95247AB99B0044A80D /* EventFlagBasicTests.swift */,
+				76908D81247BD97100A06201 /* DispatchWorkItemTest.swift */,
 				763E5A94247AB99B0044A80D /* SemLogger.swift */,
 				766C5DF22477B4AB00C197FD /* Info.plist */,
 			);
@@ -242,6 +245,7 @@
 				763E5A97247AB99B0044A80D /* SemLogger.swift in Sources */,
 				763E5A98247AB99B0044A80D /* EventFlagBasicTests.swift in Sources */,
 				763E5A99247AB99B0044A80D /* ExclusiveControlBasicTests.swift in Sources */,
+				76908D82247BD97100A06201 /* DispatchWorkItemTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
