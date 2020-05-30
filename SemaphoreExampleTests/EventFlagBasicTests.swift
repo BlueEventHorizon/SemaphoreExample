@@ -10,6 +10,12 @@ import XCTest
 
 class EventFlagBasicTests: XCTestCase {
 
+    /*
+     ✳️ Start [18:37:25.837] [main]
+     ✳️ Sent EventFlag [18:37:26.847] [com.apple.root.background-qos]
+     ✴️ Recieved EventFlag [18:37:26.847] [main]
+     */
+
     func testSingleEventFlag() throws {
 
         let semaphore  = DispatchSemaphore(value: 0)  // ⚠️ initialize binary semaphore with 0
@@ -17,33 +23,27 @@ class EventFlagBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
+        semLog.format("✳️ Start")
+
         DispatchQueue.global(qos: .background).async {
 
-            usleep(1000)
-
-            semLog.normal("✳️ Will send EventFlag just after now")
+            usleep(1000_000)
 
             semaphore.signal()
 
-            semLog.normal("✳️ Sent EventFlag")
+            semLog.format("✳️ Sent EventFlag")
 
             expectation1.fulfill()
         }
 
         semaphore.wait()
 
-        semLog.normal("✴️ Recieved EventFlag")
+        semLog.format("✴️ Recieved EventFlag")
 
         expectation2.fulfill()
 
         wait(for: [expectation1, expectation2], timeout: 10.0)
     }
-
-    /*
-     ✳️ Will send EventFlag just after now
-     ✳️ Sent EventFlag
-     ✴️ Recieved EventFlag
-     */
 
     func testMultiEventFlag() throws {
 
