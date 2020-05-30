@@ -148,7 +148,10 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        let semaphore  = DispatchSemaphore(value: 1)  // ⚠️ initialize binary semaphore with 1
+        // -----------------------------------------
+        // ⚠️ initialize binary semaphore with 1
+        let semaphore  = DispatchSemaphore(value: 1)
+        // -----------------------------------------
 
         var resource: Int = 100
         var task1_counter: Int = 0
@@ -156,10 +159,13 @@ class ExclusiveControlBasicTests: XCTestCase {
 
         // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
         func task1() -> Bool {
+
+            // --------------------------------
             defer {
                 semaphore.signal()
             }
             semaphore.wait()
+            // --------------------------------
 
             var value = resource
 
@@ -176,10 +182,13 @@ class ExclusiveControlBasicTests: XCTestCase {
 
         // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
         func task2() -> Bool {
+
+            // --------------------------------
             defer {
                 semaphore.signal()
             }
             semaphore.wait()
+            // --------------------------------
 
             var value = resource
 
