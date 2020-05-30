@@ -10,6 +10,55 @@ import XCTest
 
 class ExclusiveControlBasicTests: XCTestCase {
 
+    func testGetSetCounterWithConcurrentThread() throws {
+
+        let expectation1 = XCTestExpectation(description: "expectation1")
+        let expectation2 = XCTestExpectation(description: "expectation2")
+
+        var resource: Bool = true
+        var task1_counter: Int = 0
+        var task2_counter: Int = 0
+
+        func task1() {
+            if resource {
+                resource = false
+                task1_counter += 1
+                usleep(UInt32.random(in: 0...2))
+                resource = true
+            }
+        }
+
+        func task2() {
+            if resource {
+                resource = false
+                task2_counter += 1
+                usleep(UInt32.random(in: 0...2))
+                resource = true
+            }
+        }
+
+        // Thread 1
+        DispatchQueue.global(qos: .background).async {
+            for _ in 1..<10 {
+                task1()
+            }
+            expectation1.fulfill()  // End of Thread 1
+        }
+
+        // Thread 2
+        DispatchQueue.global(qos: .background).async {
+            for _ in 1..<10 {
+                task2()
+            }
+            expectation2.fulfill() // End of Thread 2
+        }
+
+        wait(for: [expectation1, expectation2], timeout: 10.0)
+
+        print("task1_counter = \(task1_counter)")
+        print("task2_counter = \(task2_counter)")
+    }
+
     // MARK: -
 
     /*
@@ -48,18 +97,18 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             semLog.slow("✴️ Thread 1")     // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -67,7 +116,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
@@ -114,18 +163,18 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             semLog.slow("✴️ Thread 1")     // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
         DispatchQueue.main.async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -133,7 +182,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         DispatchQueue.main.async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
@@ -183,18 +232,18 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             semLog.slow("✴️ Thread 1")     // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
         dispatchQueue.async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -202,7 +251,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         dispatchQueue.async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
@@ -255,7 +304,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             defer {
                 semaphore.signal()
             }
@@ -263,7 +312,7 @@ class ExclusiveControlBasicTests: XCTestCase {
             semLog.slow("✴️ Thread 1")     // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             defer {
                 semaphore.signal()
             }
@@ -274,7 +323,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 1
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -282,7 +331,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
@@ -332,7 +381,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             defer {
                 semaphore.signal()
             }
@@ -340,7 +389,7 @@ class ExclusiveControlBasicTests: XCTestCase {
             semLog.slow("✴️ Thread 1")    // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             defer {
                 semaphore.signal()
             }
@@ -351,7 +400,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 1
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -359,7 +408,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
@@ -377,7 +426,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             defer {
                 semaphore.signal()
             }
@@ -385,7 +434,7 @@ class ExclusiveControlBasicTests: XCTestCase {
             semLog.slow("✴️ Thread 1")    // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             defer {
                 semaphore.signal()
             }
@@ -396,7 +445,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 1
         DispatchQueue.global(qos: .default).async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -404,7 +453,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
@@ -417,18 +466,18 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        func for_thread_1() {
+        func task1() {
             semLog.slow("✴️ Thread 1")    // excluded by semaphore
         }
 
-        func for_thread_2() {
+        func task2() {
             semLog.slow("✳️ Thread 2")     // excluded by semaphore
         }
 
         // Thread 1
         DispatchQueue.global(qos: .background).async {
             for _ in 1..<10 {
-                for_thread_1()
+                task1()
             }
             expectation1.fulfill()  // End of Thread 1
         }
@@ -436,7 +485,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         // Thread 2
         DispatchQueue.global(qos: .default).async {
             for _ in 1..<10 {
-                for_thread_2()
+                task2()
             }
             expectation2.fulfill() // End of Thread 2
         }
