@@ -10,49 +10,114 @@ import XCTest
 
 class ExclusiveControlBasicTests: XCTestCase {
 
+    // MARK: -
+
+    // Qiitaに記載されたソースコード
+    #warning("動作しません")
+    // testGetSetCounterWithConcurrentThread()を使ってください
+    func testGetSetCounterWithConcurrentThreadQiita() throws {
+
+        var resource: Int = 100
+        var task1_counter: Int = 0
+        var task2_counter: Int = 0
+
+        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
+        func task1() {
+            while true {
+                var value = resource
+
+                guard value > 0 else {
+                    break
+                }
+
+                task1_counter += 1
+                value -= 1
+                resource = value
+            }
+        }
+
+        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
+        func task2() {
+            while true {
+
+                var value = resource
+
+                guard value > 0 else {
+                    break
+                }
+
+                task2_counter += 1
+                value -= 1
+                resource = value
+            }
+        }
+
+        // スレッド 1
+        DispatchQueue.global(qos: .background).async {
+            task1()
+        }
+
+        // スレッド 2
+        DispatchQueue.global(qos: .background).async {
+            task2()
+        }
+
+        // ２つのスレッドが完了するまで待つ
+
+        print("task1_counter = \(task1_counter)")
+        print("task2_counter = \(task2_counter)")
+    }
+
     func testGetSetCounterWithConcurrentThread() throws {
 
         let expectation1 = XCTestExpectation(description: "expectation1")
         let expectation2 = XCTestExpectation(description: "expectation2")
 
-        var resource: Bool = true
+        var resource: Int = 100
         var task1_counter: Int = 0
         var task2_counter: Int = 0
 
+        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
         func task1() {
-            if resource {
-                resource = false
-                task1_counter += 1
-                usleep(UInt32.random(in: 0...2))
-                resource = true
+            while true {
+                var value = resource
+                if value > 0 {
+                    task1_counter += 1
+                    value -= 1
+                    resource = value
+                } else {
+                    break
+                }
             }
         }
 
+        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
         func task2() {
-            if resource {
-                resource = false
-                task2_counter += 1
-                usleep(UInt32.random(in: 0...2))
-                resource = true
+            while true {
+                var value = resource
+                if value > 0 {
+                    task2_counter += 1
+                    value -= 1
+                    resource = value
+                } else {
+                    break
+                }
             }
         }
 
-        // Thread 1
+        // スレッド 1
         DispatchQueue.global(qos: .background).async {
-            for _ in 1..<10 {
-                task1()
-            }
+            task1()
             expectation1.fulfill()  // End of Thread 1
         }
 
-        // Thread 2
+        // スレッド 2
         DispatchQueue.global(qos: .background).async {
-            for _ in 1..<10 {
-                task2()
-            }
+            task2()
             expectation2.fulfill() // End of Thread 2
         }
 
+        // ２つのスレッドが完了するまで待つ
         wait(for: [expectation1, expectation2], timeout: 10.0)
 
         print("task1_counter = \(task1_counter)")
@@ -98,11 +163,11 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation2 = XCTestExpectation(description: "expectation2")
 
         func task1() {
-            semLog.slow("✴️ Thread 1")     // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")     // excluded by semaphore
         }
 
         func task2() {
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1
@@ -164,11 +229,11 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation2 = XCTestExpectation(description: "expectation2")
 
         func task1() {
-            semLog.slow("✴️ Thread 1")     // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")     // excluded by semaphore
         }
 
         func task2() {
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1
@@ -233,11 +298,11 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation2 = XCTestExpectation(description: "expectation2")
 
         func task1() {
-            semLog.slow("✴️ Thread 1")     // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")     // excluded by semaphore
         }
 
         func task2() {
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1
@@ -309,7 +374,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            semLog.slow("✴️ Thread 1")     // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")     // excluded by semaphore
         }
 
         func task2() {
@@ -317,7 +382,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1
@@ -386,7 +451,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()            // there are enogh semaphore for each thred, so they doesn't need to wait
-            semLog.slow("✴️ Thread 1")    // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")    // excluded by semaphore
         }
 
         func task2() {
@@ -394,7 +459,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()            // there are enogh semaphore for each thred, so they doesn't need to wait
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1
@@ -431,7 +496,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            semLog.slow("✴️ Thread 1")    // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")    // excluded by semaphore
         }
 
         func task2() {
@@ -439,7 +504,7 @@ class ExclusiveControlBasicTests: XCTestCase {
                 semaphore.signal()
             }
             semaphore.wait()
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1
@@ -467,11 +532,11 @@ class ExclusiveControlBasicTests: XCTestCase {
         let expectation2 = XCTestExpectation(description: "expectation2")
 
         func task1() {
-            semLog.slow("✴️ Thread 1")    // excluded by semaphore
+            semLog.slow("✴️✴️✴️✴️✴️")    // excluded by semaphore
         }
 
         func task2() {
-            semLog.slow("✳️ Thread 2")     // excluded by semaphore
+            semLog.slow("✳️✳️✳️✳️✳️")     // excluded by semaphore
         }
 
         // Thread 1

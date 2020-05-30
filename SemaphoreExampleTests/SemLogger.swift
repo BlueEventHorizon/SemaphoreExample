@@ -46,16 +46,20 @@ class SemLogger {
     }
 
     func slow(_ message: String) {
-        let formattedMessage = formatter(message: message)
-        for c in formattedMessage {
+        for c in message {
             print(c, separator: "", terminator: "")
             usleep(UInt32.random(in: 10...100))
         }
         print("")
     }
 
-    func info(_ message: String) {
+    func normal(_ message: String) {
         print(message)
+    }
+
+    func format(_ message: String) {
+        let formattedMessage = formatter(message: message)
+        print(formattedMessage)
     }
 }
 

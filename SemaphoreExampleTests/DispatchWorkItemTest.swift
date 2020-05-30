@@ -19,7 +19,7 @@ class DispatchWorkItemTest: XCTestCase {
         let expectation1 = XCTestExpectation(description: "expectation1")
 
         let executeLater = { () -> Void in
-            semLog.info("✳️ WorkItem Executed")
+            semLog.normal("✳️ WorkItem Executed")
             expectation1.fulfill()
         }
 
@@ -41,7 +41,7 @@ class DispatchWorkItemTest: XCTestCase {
         var executed = false
 
         let executeLater = { () -> Void in
-            semLog.info("✳️ WorkItem Executed")
+            semLog.normal("✳️ WorkItem Executed")
             executed = true
         }
 
@@ -72,7 +72,7 @@ class DispatchWorkItemTest: XCTestCase {
             workItem?.cancel()
 
             let executeLater = { () -> Void in
-                semLog.info("✳️ \(counter) WorkItem Executed")
+                semLog.normal("✳️ \(counter) WorkItem Executed")
                 expectation1.fulfill()
             }
 
