@@ -230,6 +230,68 @@ class ExclusiveControlBasicTests: XCTestCase {
         print("task2_counter = \(task2_counter)")
     }
 
+    func testDeadlockBySemaphore() throws {
+
+        var expectations: [XCTestExpectation] = [XCTestExpectation]()
+
+        class SemThread {
+            let semaphore = DispatchSemaphore(value: 1)
+            var resource: Int = 0
+            var other: SemThread?
+            let expectation: XCTestExpectation
+            let name: String
+
+            // 生成時にセマフォを取得し、外部からのインクリメントをブロックする
+            init(name: String) {
+                self.name = name
+                expectation = XCTestExpectation(description: name)
+            }
+
+            // otherに対してカウントアップ要求を出す。その後、外部からのインクリメントを許可
+            func run() {
+                DispatchQueue.global(qos: .background).async {
+
+                    self.increment()
+
+                    self.expectation.fulfill()
+                    semLog.format("⭐️\(self.name) completed")
+                }
+            }
+
+            func increment() {
+
+                semLog.format("⭐️\(self.name) will wait")
+                semaphore.wait()
+
+                usleep(100)
+
+                semLog.format("⭐️\(self.name) make other increment")
+                // 自セマフォを取得中に、相互参照している外部オブジェクトを利用する
+                self.other?.increment()
+
+                resource += 1
+                semaphore.signal()
+            }
+        }
+
+        let thread1 = SemThread(name: "thread1")
+        let thread2 = SemThread(name: "thread2")
+
+        expectations.append(thread1.expectation)
+        expectations.append(thread2.expectation)
+
+        // クロス参照する
+        thread1.other = thread2
+        thread2.other = thread1
+
+        // スレッド開始
+        thread1.run()
+        thread2.run()
+
+        // ２つのスレッドが完了するまで待つ（が、必ず失敗）
+        wait(for: expectations, timeout: 5.0)
+    }
+
     // MARK: -
 
     /*
