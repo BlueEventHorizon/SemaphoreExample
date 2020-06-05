@@ -13,7 +13,7 @@ class ExclusiveControlBasicTests: XCTestCase {
     // MARK: -
 
     // Qiitaに記載されたソースコード
-    #warning("動作しません")
+    // #warning("動作しません")
     // testHandleResourceWithoutSemaphore()を使ってください
     //    func testHandleResourceWithoutSemaphoreQiita() throws {
     //
@@ -75,6 +75,7 @@ class ExclusiveControlBasicTests: XCTestCase {
     //        print("task2_counter = \(task2_counter)")
     //    }
 
+    // 実際にテストできるコードはこちら
     func testHandleResourceWithoutSemaphore() throws {
 
         let expectation1 = XCTestExpectation(description: "expectation1")
