@@ -15,65 +15,65 @@ class ExclusiveControlBasicTests: XCTestCase {
     // Qiitaに記載されたソースコード
     #warning("動作しません")
     // testHandleResourceWithoutSemaphore()を使ってください
-    func testHandleResourceWithoutSemaphoreQiita() throws {
-
-        var resource: Int = 100
-        var task1_counter: Int = 0
-        var task2_counter: Int = 0
-
-        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
-        func task1() -> Bool {
-
-            var value = resource
-
-            guard value > 0 else {
-                return false
-            }
-
-            task1_counter += 1
-            value -= 1
-            resource = value
-
-            return true
-        }
-
-        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
-        func task2() -> Bool {
-
-            var value = resource
-
-            guard value > 0 else {
-                return false
-            }
-
-            task2_counter += 1
-            value -= 1
-            resource = value
-
-            return true
-        }
-
-        // スレッド 1
-        DispatchQueue.global(qos: .background).async {
-            var executing = true
-            while executing {
-                executing = task1()
-            }
-        }
-
-        // スレッド 2
-        DispatchQueue.global(qos: .background).async {
-            var executing = true
-            while executing {
-                executing = task2()
-            }
-        }
-
-        // ２つのスレッドが完了するまで待つ
-
-        print("task1_counter = \(task1_counter)")
-        print("task2_counter = \(task2_counter)")
-    }
+    //    func testHandleResourceWithoutSemaphoreQiita() throws {
+    //
+    //        var resource: Int = 100
+    //        var task1_counter: Int = 0
+    //        var task2_counter: Int = 0
+    //
+    //        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
+    //        func task1() -> Bool {
+    //
+    //            var value = resource
+    //
+    //            guard value > 0 else {
+    //                return false
+    //            }
+    //
+    //            task1_counter += 1
+    //            value -= 1
+    //            resource = value
+    //
+    //            return true
+    //        }
+    //
+    //        // resourceがゼロ以上の場合は、自分のカウンターを１加算してresourceを１減算する
+    //        func task2() -> Bool {
+    //
+    //            var value = resource
+    //
+    //            guard value > 0 else {
+    //                return false
+    //            }
+    //
+    //            task2_counter += 1
+    //            value -= 1
+    //            resource = value
+    //
+    //            return true
+    //        }
+    //
+    //        // スレッド 1
+    //        DispatchQueue.global(qos: .background).async {
+    //            var executing = true
+    //            while executing {
+    //                executing = task1()
+    //            }
+    //        }
+    //
+    //        // スレッド 2
+    //        DispatchQueue.global(qos: .background).async {
+    //            var executing = true
+    //            while executing {
+    //                executing = task2()
+    //            }
+    //        }
+    //
+    //        // ２つのスレッドが完了するまで待つ
+    //
+    //        print("task1_counter = \(task1_counter)")
+    //        print("task2_counter = \(task2_counter)")
+    //    }
 
     func testHandleResourceWithoutSemaphore() throws {
 
