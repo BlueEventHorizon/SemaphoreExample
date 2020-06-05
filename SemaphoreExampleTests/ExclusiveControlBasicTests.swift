@@ -75,7 +75,7 @@ class ExclusiveControlBasicTests: XCTestCase {
     //        print("task2_counter = \(task2_counter)")
     //    }
 
-    // 実際にテストできるコードはこちら
+    // (1) 実際にテストできるコードはこちら：ダメなやつ
     func testHandleResourceWithoutSemaphore() throws {
 
         let expectation1 = XCTestExpectation(description: "expectation1")
@@ -144,6 +144,7 @@ class ExclusiveControlBasicTests: XCTestCase {
         print("task2_counter = \(task2_counter)")
     }
 
+    // (2) 実際にテストできるコードはこちら：ちゃんと動くやつ
     func testHandleResourceWithSemaphore() throws {
 
         let expectation1 = XCTestExpectation(description: "expectation1")
